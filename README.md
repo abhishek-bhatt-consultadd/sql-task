@@ -1,7 +1,7 @@
 # SQL task
 
 
-## Task 1: [Problem Statement]()
+## Task 1: Question
 
 Create table and insert data
 
@@ -85,8 +85,7 @@ SS:
 
 ## Task 2:  Er Diagram table creation code
 
-
-
+![ER-Diagram](first_task.drawio.png)
 ```
 -- customer table creation
 Create table customer
