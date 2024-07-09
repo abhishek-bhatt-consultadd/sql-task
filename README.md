@@ -3,6 +3,8 @@
 
 ## Task 1: Question
 
+![Question](SQLQuestion.pdf)
+
 Create table and insert data
 
 ```
