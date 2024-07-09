@@ -1,6 +1,8 @@
 # SQL task
 
 
+## Task 1: [Problem Statement]()
+
 Create table and insert data
 
 ```
@@ -21,8 +23,6 @@ INSERT INTO unlabeled_image_predictions (image_id, score) VALUES
 SS:
 <img width="1342" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/af06dc5d-6739-4a7f-81cb-23abad31f85c">
 
-
-
 - Query 1:
 
 ```
@@ -32,22 +32,22 @@ FROM
     SELECT image_id, score, ROW_NUMBER() OVER (ORDER BY score desc) AS rownum
     FROM unlabeled_image_predictions
 ) AS t	
-WHERE t.rownum % 3 = 0   and rownum < 3334
+WHERE t.rownum % 3 = 0   and rownum < 3334 and score < 0.5
 
 UNION
 
 SELECT t.image_id, 1 as weak_id
 FROM
 (
-    SELECT image_id, score, ROW_NUMBER() OVER (ORDER BY score) AS rownum
+    SELECT image_id, score, ROW_NUMBER() OVER (ORDER BY score desc) AS rownum
     FROM unlabeled_image_predictions 
 ) AS t
-WHERE t.rownum % 3 = 0  and rownum < 3334
+WHERE t.rownum % 3 = 0  and rownum < 3334 and score >= 0.5
 ORDER BY t.image_id;
 ```
 
 SS: 
-<img width="1334" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/b7eeaa61-a470-4ee7-8a77-76a1f7e020a8">
+<img width="1342" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/3f75723f-4bc4-4213-a618-4811556f51e8">
 
 
 - Query 2:
@@ -59,17 +59,17 @@ WITH pos_samples (image_id, score) AS (
     SELECT image_id, score, ROW_NUMBER() OVER (ORDER BY score DESC) AS row_num
     FROM unlabeled_image_predictions
   ) AS t
-  WHERE row_num % 3 = 0
-  LIMIT 11114
+  WHERE row_num % 3 = 0 and score >= 0.5
+  LIMIT 3334
 ),
 neg_samples (image_id, score) AS (
   SELECT image_id, score
   FROM (
-    SELECT image_id, score, ROW_NUMBER() OVER (ORDER BY score) AS row_num
+    SELECT image_id, score, ROW_NUMBER() OVER (ORDER BY score DESC) AS row_num
     FROM unlabeled_image_predictions
   ) AS t
-  WHERE row_num % 3 = 0
-  LIMIT 11114
+  WHERE row_num % 3 = 0 and score < 0.5
+  LIMIT 3334
 )
 SELECT ps.image_id, 1 AS weak_label
 FROM pos_samples ps
@@ -80,6 +80,56 @@ ORDER BY image_id;
 ```
 
 SS: 
-<img width="1334" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/58ad6757-bf07-46b3-9651-dbad4362e4fc">
+<img width="1342" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/93242e36-1fd9-40b4-9f0d-130c1b5de745">
+
+
+## Task 2:  Er Diagram table creation code
+
+
+
+```
+-- customer table creation
+Create table customer
+(
+customer_id int primary key,
+name varchar(50) not null,
+address varchar(50) not null
+);
+
+-- product table creation 
+create table product
+(
+product_id int primary key,
+name varchar(50) not null,
+price float not null
+);
+
+
+-- orders table creation 
+create table orders
+(
+order_id int primary key,
+order_date date not null,
+customer_id  int,
+foreign key (customer_id) references customer(customer_id)
+);
+
+-- order details table creation
+create table order_details
+(
+order_id int,
+product_id int,
+quantity int,
+Primary key (order_id,product_id),
+foreign key (product_id) references product(product_id),
+FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+```
+
+SS:
+
+<img width="1415" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/fa0b371f-17e1-42e7-9176-c1092ada1ab8">
+
+
 
 
