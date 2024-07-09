@@ -3,7 +3,7 @@
 
 Create table and insert data
 
-`
+```
 CREATE TABLE IF NOT EXISTS unlabeled_image_predictions (
 image_id int, score float
 );
@@ -16,7 +16,7 @@ INSERT INTO unlabeled_image_predictions (image_id, score) VALUES
 ('823', '0.3361'), ('617', '0.0218'), ('47', '0.0072'), ('867', '0.4050'), ('96', '0.4498'), ('126', '0.3564'), ('9431', '0.0452'),
 ('115', '0.5309'), ('417', '0.7168'), ('706', '0.9649' ), ('166', '0.2507'), ('991', '0.4191'), ('465', '0.0895'), ('53', '0.8169'),
 ('971', '0.9871');
-`
+```
 
 SS:
 <img width="1342" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/af06dc5d-6739-4a7f-81cb-23abad31f85c">
@@ -25,6 +25,7 @@ SS:
 
 - Query 1:
 
+```
 SELECT t.image_id, 0 as weak_id
 FROM
 (
@@ -43,7 +44,7 @@ FROM
 ) AS t
 WHERE t.rownum % 3 = 0  and rownum < 3334
 ORDER BY t.image_id;
-
+```
 
 SS: 
 <img width="1334" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/b7eeaa61-a470-4ee7-8a77-76a1f7e020a8">
@@ -51,6 +52,7 @@ SS:
 
 - Query 2:
 
+```
 WITH pos_samples (image_id, score) AS (
   SELECT image_id, score
   FROM (
@@ -75,7 +77,7 @@ UNION
 SELECT ns.image_id, 0 AS weak_label
 FROM neg_samples ns
 ORDER BY image_id;
-
+```
 
 SS: 
 <img width="1334" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/58ad6757-bf07-46b3-9651-dbad4362e4fc">
