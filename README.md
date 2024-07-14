@@ -131,6 +131,87 @@ SS:
 
 <img width="1415" alt="image" src="https://github.com/abhishek-bhatt-consultadd/sql-task/assets/174770106/fa0b371f-17e1-42e7-9176-c1092ada1ab8">
 
+## Task 3: Question
 
+![Question](SQL_Problem_2.md)
+
+Answer:
+
+```
+
+WITH HotelBookCount AS (
+    SELECT
+        h.city_id,
+        h.id AS hotel_id,
+        COUNT(b.id) AS booking_count
+    FROM
+        hotel h
+        LEFT JOIN booking b ON h.id = b.hotel_id
+    GROUP BY
+        h.city_id, h.id
+),
+MostBookedHotel AS (
+    SELECT
+        h.city_id,
+        h.hotel_id,
+        h.booking_count
+    FROM
+        HotelBookCount h
+        JOIN (
+            SELECT
+                city_id,
+                MAX(booking_count) AS max_booking_count
+            FROM
+                HotelBookCount
+            GROUP BY
+                city_id
+        ) m ON h.city_id = m.city_id
+        AND h.booking_count = m.max_booking_count
+),
+CityLastBooking AS (
+    SELECT
+        h.city_id,
+        MAX(b.booking_date) AS last_booking_date
+    FROM
+        booking b
+        JOIN hotel h ON b.hotel_id = h.id
+    GROUP BY
+        h.city_id
+),
+HotelPhoto AS (
+    SELECT
+        h.id AS hotel_id,
+        (h.photos->>0) AS hotel_photo
+    FROM
+        hotel h
+),
+FinalOutput AS (
+    SELECT
+        c.name AS city_name,
+        cl.last_booking_date,
+        mbh.hotel_id,
+        hp.hotel_photo
+    FROM
+        MostBookedHotel mbh
+        JOIN city c ON mbh.city_id = c.id
+        JOIN CityLastBooking cl ON c.id = cl.city_id
+        JOIN HotelPhoto hp ON mbh.hotel_id = hp.hotel_id
+)
+SELECT
+    city_name,
+    last_booking_date,
+    hotel_id,
+    hotel_photo
+FROM
+    FinalOutput
+ORDER BY
+    city_name,
+    hotel_id;
+
+```
+
+
+SS:
+<img width="1422" alt="image" src="https://github.com/user-attachments/assets/29d5c2e5-4cc9-4c03-a8bd-7b1af887fd7e">
 
 
